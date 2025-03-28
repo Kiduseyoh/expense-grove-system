@@ -28,6 +28,7 @@ export interface MoneySource {
   color?: string;
   icon?: string;
   isArchived: boolean;
+  isDefault?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -55,6 +56,8 @@ export interface Expense {
   date: string;
   isRecurring: boolean;
   recurringFrequency?: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+  recurringInterval?: string;
+  currency?: string;
   attachments?: string[];
   tags?: string[];
   category?: Category;
@@ -71,6 +74,10 @@ export interface BalanceHistory {
   balanceAfter: number;
   date: string;
   reason: string;
+  previousBalance?: number;
+  newBalance?: number;
+  changeAmount?: number;
+  changeReason?: string;
   moneySource?: MoneySource;
   createdAt: string;
   updatedAt: string;
@@ -83,6 +90,10 @@ export interface ExpenseHistory {
   changeType: 'CREATE' | 'UPDATE' | 'DELETE';
   previousData?: Partial<Expense>;
   newData?: Partial<Expense>;
+  previousAmount?: number;
+  newAmount?: number;
+  changeReason?: string;
+  date?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -100,6 +111,9 @@ export interface DashboardOverview {
   totalSavings: number;
   netBalance: number;
   period: string;
+  totalBalance?: number;
+  currency?: string;
+  savingsRate?: number;
 }
 
 export interface ExpenseTrend {
@@ -107,6 +121,9 @@ export interface ExpenseTrend {
   expenses: number;
   income: number;
   savings: number;
+  date?: string;
+  amount?: number;
+  category?: string;
 }
 
 export interface ExpenseComposition {
@@ -114,6 +131,7 @@ export interface ExpenseComposition {
   categoryName: string;
   amount: number;
   percentage: number;
+  category?: string;
 }
 
 export interface BudgetComparison {
@@ -123,6 +141,8 @@ export interface BudgetComparison {
   actual: number;
   difference: number;
   percentageUsed: number;
+  category?: string;
+  budgeted?: number;
 }
 
 export interface AuthResponse {

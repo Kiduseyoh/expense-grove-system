@@ -1,4 +1,3 @@
-
 import { useQuery } from '@tanstack/react-query';
 import { dashboardAPI, moneySourcesAPI, categoriesAPI, expensesAPI } from '@/services/api';
 import { useExchangeRates } from '@/contexts/ExchangeRatesContext';
@@ -32,7 +31,7 @@ const DashboardPage = () => {
 
   const { data: recentExpenses, isLoading: isExpensesLoading } = useQuery({
     queryKey: ['recentExpenses'],
-    queryFn: () => expensesAPI.getAll({ limit: 5, sort: 'date:desc' }),
+    queryFn: expensesAPI.getAll,
   });
 
   const isLoading = isOverviewLoading || isMoneySourcesLoading || isCategoriesLoading || isExpensesLoading;

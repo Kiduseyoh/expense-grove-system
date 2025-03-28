@@ -26,7 +26,6 @@ const mockUsers: Record<string, User> = {
     id: '1',
     email: 'jane@example.com',
     name: 'Jane Doe',
-    currency: 'USD',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -34,7 +33,6 @@ const mockUsers: Record<string, User> = {
     id: '2',
     email: 'john@example.com',
     name: 'John Smith',
-    currency: 'EUR',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   }
@@ -46,16 +44,16 @@ const mockPasswords: Record<string, string> = {
 };
 
 const mockExchangeRates: ExchangeRate[] = [
-  { code: 'USD', name: 'US Dollar', rate: 1.0, updatedAt: new Date().toISOString() },
-  { code: 'EUR', name: 'Euro', rate: 0.91, updatedAt: new Date().toISOString() },
-  { code: 'GBP', name: 'British Pound', rate: 0.78, updatedAt: new Date().toISOString() },
-  { code: 'JPY', name: 'Japanese Yen', rate: 149.82, updatedAt: new Date().toISOString() },
-  { code: 'CAD', name: 'Canadian Dollar', rate: 1.35, updatedAt: new Date().toISOString() },
-  { code: 'AUD', name: 'Australian Dollar', rate: 1.52, updatedAt: new Date().toISOString() },
-  { code: 'CHF', name: 'Swiss Franc', rate: 0.89, updatedAt: new Date().toISOString() },
-  { code: 'CNY', name: 'Chinese Yuan', rate: 7.23, updatedAt: new Date().toISOString() },
-  { code: 'INR', name: 'Indian Rupee', rate: 83.41, updatedAt: new Date().toISOString() },
-  { code: 'BRL', name: 'Brazilian Real', rate: 5.04, updatedAt: new Date().toISOString() },
+  { code: 'USD', name: 'US Dollar', rate: 1.0, date: new Date().toISOString() },
+  { code: 'EUR', name: 'Euro', rate: 0.91, date: new Date().toISOString() },
+  { code: 'GBP', name: 'British Pound', rate: 0.78, date: new Date().toISOString() },
+  { code: 'JPY', name: 'Japanese Yen', rate: 149.82, date: new Date().toISOString() },
+  { code: 'CAD', name: 'Canadian Dollar', rate: 1.35, date: new Date().toISOString() },
+  { code: 'AUD', name: 'Australian Dollar', rate: 1.52, date: new Date().toISOString() },
+  { code: 'CHF', name: 'Swiss Franc', rate: 0.89, date: new Date().toISOString() },
+  { code: 'CNY', name: 'Chinese Yuan', rate: 7.23, date: new Date().toISOString() },
+  { code: 'INR', name: 'Indian Rupee', rate: 83.41, date: new Date().toISOString() },
+  { code: 'BRL', name: 'Brazilian Real', rate: 5.04, date: new Date().toISOString() },
 ];
 
 // Mock API helper (simulates network delay)
@@ -303,47 +301,43 @@ export const exchangeRatesAPI = {
 export const dashboardAPI = {
   getOverview: async (): Promise<DashboardOverview> => {
     return mockApiResponse({
-      totalBalance: 5240.75,
       totalExpenses: 1850.25,
       totalIncome: 3500.00,
-      savingsRate: 28.5,
-      currency: 'USD'
+      totalSavings: 1000.00,
+      netBalance: 5240.75,
+      period: 'This month',
+      currency: 'USD',
+      savingsRate: 28.5
     });
   },
   
   getTrends: async (period?: string): Promise<ExpenseTrend[]> => {
     return mockApiResponse([
-      { date: '2023-01', amount: 1250.50, category: 'Housing' },
-      { date: '2023-02', amount: 1320.75, category: 'Housing' },
-      { date: '2023-03', amount: 1425.30, category: 'Housing' },
-      { date: '2023-01', amount: 350.25, category: 'Food' },
-      { date: '2023-02', amount: 410.50, category: 'Food' },
-      { date: '2023-03', amount: 385.75, category: 'Food' },
-      { date: '2023-01', amount: 120.00, category: 'Transportation' },
-      { date: '2023-02', amount: 135.50, category: 'Transportation' },
-      { date: '2023-03', amount: 142.25, category: 'Transportation' },
+      { period: '2023-01', expenses: 1250.50, income: 3000.00, savings: 800.00, date: '2023-01', amount: 1250.50, category: 'Housing' },
+      { period: '2023-02', expenses: 1320.75, income: 3100.00, savings: 850.00, date: '2023-02', amount: 1320.75, category: 'Housing' },
+      { period: '2023-03', expenses: 1425.30, income: 3200.00, savings: 900.00, date: '2023-03', amount: 1425.30, category: 'Housing' },
     ]);
   },
   
   getExpenseComposition: async (): Promise<ExpenseComposition[]> => {
     return mockApiResponse([
-      { category: 'Housing', amount: 1200, percentage: 48 },
-      { category: 'Food', amount: 500, percentage: 20 },
-      { category: 'Transportation', amount: 300, percentage: 12 },
-      { category: 'Entertainment', amount: 200, percentage: 8 },
-      { category: 'Utilities', amount: 150, percentage: 6 },
-      { category: 'Other', amount: 150, percentage: 6 },
+      { categoryId: '1', categoryName: 'Housing', amount: 1200, percentage: 48, category: 'Housing' },
+      { categoryId: '2', categoryName: 'Food', amount: 500, percentage: 20, category: 'Food' },
+      { categoryId: '3', categoryName: 'Transportation', amount: 300, percentage: 12, category: 'Transportation' },
+      { categoryId: '4', categoryName: 'Entertainment', amount: 200, percentage: 8, category: 'Entertainment' },
+      { categoryId: '5', categoryName: 'Utilities', amount: 150, percentage: 6, category: 'Utilities' },
+      { categoryId: '6', categoryName: 'Other', amount: 150, percentage: 6, category: 'Other' },
     ]);
   },
   
   getBudgetComparison: async (): Promise<BudgetComparison[]> => {
     return mockApiResponse([
-      { category: 'Housing', budgeted: 1200, actual: 1150 },
-      { category: 'Food', budgeted: 500, actual: 520 },
-      { category: 'Transportation', budgeted: 300, actual: 280 },
-      { category: 'Entertainment', budgeted: 200, actual: 250 },
-      { category: 'Utilities', budgeted: 150, actual: 145 },
-      { category: 'Other', budgeted: 150, actual: 120 },
+      { categoryId: '1', categoryName: 'Housing', budget: 1200, actual: 1150, difference: 50, percentageUsed: 95.8, budgeted: 1200, category: 'Housing' },
+      { categoryId: '2', categoryName: 'Food', budget: 500, actual: 520, difference: -20, percentageUsed: 104, budgeted: 500, category: 'Food' },
+      { categoryId: '3', categoryName: 'Transportation', budget: 300, actual: 280, difference: 20, percentageUsed: 93.3, budgeted: 300, category: 'Transportation' },
+      { categoryId: '4', categoryName: 'Entertainment', budget: 200, actual: 250, difference: -50, percentageUsed: 125, budgeted: 200, category: 'Entertainment' },
+      { categoryId: '5', categoryName: 'Utilities', budget: 150, actual: 145, difference: 5, percentageUsed: 96.7, budgeted: 150, category: 'Utilities' },
+      { categoryId: '6', categoryName: 'Other', budget: 150, actual: 120, difference: 30, percentageUsed: 80, budgeted: 150, category: 'Other' },
     ]);
   },
   
@@ -403,10 +397,11 @@ export const moneySourcesAPI = {
         id: '1',
         userId: '1',
         name: 'Bank Account',
-        type: 'Bank',
+        type: 'BANK',
         balance: 4200.50,
         currency: 'USD',
         isDefault: true,
+        isArchived: false,
         color: '#4CAF50',
         icon: 'bank',
         createdAt: new Date().toISOString(),
@@ -416,10 +411,11 @@ export const moneySourcesAPI = {
         id: '2',
         userId: '1',
         name: 'Credit Card',
-        type: 'CreditCard',
+        type: 'CREDIT_CARD',
         balance: -320.25,
         currency: 'USD',
         isDefault: false,
+        isArchived: false,
         color: '#F44336',
         icon: 'credit-card',
         createdAt: new Date().toISOString(),
@@ -429,10 +425,11 @@ export const moneySourcesAPI = {
         id: '3',
         userId: '1',
         name: 'Savings',
-        type: 'Bank',
+        type: 'BANK',
         balance: 1360.50,
         currency: 'USD',
         isDefault: false,
+        isArchived: false,
         color: '#2196F3',
         icon: 'savings',
         createdAt: new Date().toISOString(),
@@ -482,15 +479,10 @@ export const moneySourcesAPI = {
       updatedAt: new Date().toISOString(),
     };
     
-    // In a real app, we'd update the database
-    // Here we'll just return the updated source
-    
     return mockApiResponse(updatedSource);
   },
   
   delete: async (id: string): Promise<void> => {
-    // In a real app, we'd delete from the database
-    // Here we'll just return success
     return mockApiResponse(void 0);
   },
 };
@@ -503,8 +495,10 @@ export const categoriesAPI = {
         id: '1',
         userId: '1',
         name: 'Housing',
+        type: 'EXPENSE',
         color: '#4CAF50',
         icon: 'home',
+        isArchived: false,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
@@ -512,8 +506,10 @@ export const categoriesAPI = {
         id: '2',
         userId: '1',
         name: 'Food',
+        type: 'EXPENSE',
         color: '#F44336',
         icon: 'restaurant',
+        isArchived: false,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
@@ -521,8 +517,10 @@ export const categoriesAPI = {
         id: '3',
         userId: '1',
         name: 'Transportation',
+        type: 'EXPENSE',
         color: '#2196F3',
         icon: 'car',
+        isArchived: false,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
@@ -530,8 +528,10 @@ export const categoriesAPI = {
         id: '4',
         userId: '1',
         name: 'Entertainment',
+        type: 'EXPENSE',
         color: '#9C27B0',
         icon: 'movie',
+        isArchived: false,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
@@ -539,8 +539,10 @@ export const categoriesAPI = {
         id: '5',
         userId: '1',
         name: 'Utilities',
+        type: 'EXPENSE',
         color: '#FF9800',
         icon: 'bolt',
+        isArchived: false,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
@@ -548,8 +550,10 @@ export const categoriesAPI = {
         id: '6',
         userId: '1',
         name: 'Other',
+        type: 'EXPENSE',
         color: '#607D8B',
         icon: 'shopping-bag',
+        isArchived: false,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
@@ -709,11 +713,14 @@ export const balanceHistoryAPI = {
         id: '1',
         userId: '1',
         moneySourceId: '1',
+        amount: 200.25,
+        balanceAfter: 4200.50,
+        date: '2023-03-01T00:00:00.000Z',
+        reason: 'Deposit',
         previousBalance: 4000.25,
         newBalance: 4200.50,
         changeAmount: 200.25,
         changeReason: 'Deposit',
-        date: '2023-03-01T00:00:00.000Z',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
@@ -721,11 +728,14 @@ export const balanceHistoryAPI = {
         id: '2',
         userId: '1',
         moneySourceId: '2',
+        amount: -69.50,
+        balanceAfter: -320.25,
+        date: '2023-03-05T00:00:00.000Z',
+        reason: 'Purchase',
         previousBalance: -250.75,
         newBalance: -320.25,
         changeAmount: -69.50,
         changeReason: 'Purchase',
-        date: '2023-03-05T00:00:00.000Z',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
@@ -788,10 +798,13 @@ export const expenseHistoryAPI = {
         id: '1',
         userId: '1',
         expenseId: '1',
+        changeType: 'UPDATE',
         previousAmount: 1100,
         newAmount: 1150,
         changeReason: 'Rent increase',
         date: '2023-03-01T00:00:00.000Z',
+        previousData: { amount: 1100 },
+        newData: { amount: 1150 },
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
